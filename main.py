@@ -581,6 +581,7 @@ class PurchaseHistory(QDialog):
 
     # Download's a purchased track selected by the user.
     def downloadTrack(self):
+        global soundcloud_api_key
         # Determines if there are any purchases on the user's account.
         if (len(currentAccount.purchases) > 0):
             downloadChoice = self.getCurrentSong()
@@ -591,7 +592,7 @@ class PurchaseHistory(QDialog):
                 savePath = saveRequest[0]
                 if (not savePath.endswith(".mp3")):
                     savePath += ".mp3"
-                progressDialog.downloadFile(downloadChoice.streamUrl + "?client_id=068f5a834914babe8da5876826cf2061", savePath, "Currently downloading '%s'..." % (downloadChoice.title))
+                progressDialog.downloadFile(downloadChoice.streamUrl + "?client_id=" + soundcloud_api_key + " " + savePath + " Currently downloading '%s'..." % (downloadChoice.title))
         else:
             QMessageBox.information(self, "Download Track", "You have no purchases.")
 
@@ -904,7 +905,8 @@ class MainWindow(QMainWindow):
 
     # Play's or sets a song on the media player according to a given stream URL.
     def setMusic(self, streamUrl, play=False):
-        self.player.setMedia(QMediaContent(QUrl(streamUrl + "?client_id=068f5a834914babe8da5876826cf2061")))
+        global soundcloud_api_key
+        self.player.setMedia(QMediaContent(QUrl(streamUrl + "?client_id=" + soundcloud_api_key)))
         if (play):
             self.playMusic()
 
